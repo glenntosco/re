@@ -1,0 +1,96 @@
+@page "/manage-properties"
+
+
+@using Re.Models
+@using Re.Models.RealEstateDB
+
+
+<PageTitle>Properties</PageTitle>
+<RadzenStack class="rz-w-100 rz-mx-auto rz-px-8 rz-px-md-6 rz-pt-3 rz-pt-sm-6 rz-pb-6 rz-pb-sm-12" Style="max-width: 1440px;" Gap="1rem;">
+    <RadzenRow AlignItems="AlignItems.Center" Style="margin-bottom: 20px;">
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenText Text="Properties" TextStyle="TextStyle.H3" TagName="TagName.H1" style="margin: 0" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="6">
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                <RadzenButton Icon="add_circle_outline" Text="Add Property" Click="@AddButtonClick" Variant="Variant.Flat" />
+            </RadzenStack>
+        </RadzenColumn>
+    </RadzenRow>
+    <RadzenRow>
+      <RadzenColumn SizeMD=12>
+        <RadzenDataGrid @ref="grid0" ColumnWidth="200px" ExpandMode=DataGridExpandMode.Single  AllowFiltering="true" FilterMode="FilterMode.Advanced" AllowPaging="true" AllowSorting="true" ShowPagingSummary="true" PageSizeOptions=@(new int[]{5, 10, 20, 30})
+           Data="@(properties)" Count=@count LoadData="@LoadData" IsLoading="@isLoading" TItem="Property" RowSelect="@EditRow" RowExpand="@GetChildData">
+            <Columns>
+                <RadzenDataGridColumn TItem="Property" Property="Type" Title="Type">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Title" Title="Title">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Description" Title="Description">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Price" Title="Price">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Bedrooms" Title="Bedrooms">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Bathrooms" Title="Bathrooms">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Garage" Title="Garage">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="SquareMeters" Title="Square Meters">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="YearBuilt" Title="Year Built">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Address" Title="Address">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="Features" Title="Features">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="NearbyAmenities" Title="Nearby Amenities">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Property="ClosedDate" Title="Closed Date">
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn TItem="Property" Frozen="true" FrozenPosition="FrozenColumnPosition.Right" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+                    <Template Context="property">
+
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Size="ButtonSize.Medium"
+                            Shade="Shade.Lighter" Variant="Variant.Flat"
+                            Click=@(args => GridDeleteButtonClick(args, property)) @onclick:stopPropagation="true" />
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+            <Template Context="property">
+                <RadzenStack class="rz-my-8 rz-w-100" AlignItems="AlignItems.Start">
+                    <RadzenRow Gap="1rem" AlignItems="AlignItems.Center" Style="margin-bottom: 20px">
+                        <RadzenColumn Size="6">
+                            <RadzenText Visible="@(propertyChild != null)" Text="Pictures" TextStyle="TextStyle.H4" TagName="TagName.H2" style="margin: 0" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="6">
+                            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                                <RadzenButton Visible="@(propertyChild != null)" Icon="add_circle_outline" Text="Add" Click=@(args => PropertyPicturesAddButtonClick(args,propertyChild)) />
+                            </RadzenStack>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenDataList Visible="@(propertyChild != null)" @ref=PropertyPicturesDataGrid Data="@propertyChild?.PropertyPictures" TItem="PropertyPicture" Style="width: 100%; max-width: 500px;">
+                        <Template Context="propertyPictureChild">
+                            <RadzenRow Gap="1rem">
+                                <RadzenColumn Size="12" SizeLG="6">
+                                    <RadzenImage Path=@($"{propertyPictureChild.Picture}") class="rz-w-100" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeLG="6">
+                                    <RadzenStack Gap="0.25rem;">
+                                        <RadzenButton ButtonStyle="ButtonStyle.Info" Icon="edit" Text="Edit" Size="ButtonSize.Medium" Shade="Shade.Lighter" Variant="Variant.Flat" class="rz-w-100"
+                                                        Click=@(args => PropertyPicturesRowSelect(propertyPictureChild, propertyChild)) @onclick:stopPropagation="true" />
+
+                                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="delete" Text="Delete" Size="ButtonSize.Medium" Shade="Shade.Lighter" Variant="Variant.Flat" class="rz-w-100"
+                                                        Click=@(args => PropertyPicturesDeleteButtonClick(args, propertyPictureChild)) @onclick:stopPropagation="true" />
+                                    </RadzenStack>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </Template>
+                    </RadzenDataList>
+                </RadzenStack>
+            </Template>
+        </RadzenDataGrid>
+
+    </RadzenColumn>
+  </RadzenRow>
+</RadzenStack>

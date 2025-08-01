@@ -1,0 +1,27 @@
+@page "/add-property-picture"
+
+
+@using Re.Models
+@using Re.Models.RealEstateDB
+@attribute [Authorize]
+<PageTitle>Add PropertyPicture</PageTitle>
+<RadzenRow>
+    <RadzenColumn SizeMD=12>
+        <RadzenAlert Shade="Shade.Lighter" Variant="Variant.Flat" Size="AlertSize.Small" AlertStyle="AlertStyle.Danger" Visible="@errorVisible">Cannot save PropertyPicture</RadzenAlert>
+        <RadzenTemplateForm TItem="PropertyPicture" Data="@(propertyPicture)" Visible="@(propertyPicture != null)" Submit="@FormSubmit">
+            <RadzenRow style="background-color: var(--rz-upload-files-background-color);" class="rz-p-6 rz-m-6 rz-border-radius">
+                <RadzenColumn SizeMD="3">
+                    <RadzenLabel Text="Picture" Component="Picture" style="width: 100%" />
+                </RadzenColumn>
+                <RadzenColumn SizeMD="9">
+                    <RadzenFileInput style="display: block; width: 100%" @bind-Value="@(propertyPicture.Picture)" Name="Picture" />
+                    <RadzenRequiredValidator Component="Picture" Text="Picture is required" />
+                </RadzenColumn>
+            </RadzenRow>
+          <RadzenStack  Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" Gap="0.5rem">
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Submit" Icon="save" Text="Save" Variant="Variant.Flat" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Text="Cancel" Variant="Variant.Flat" Click="@CancelButtonClick"  />
+          </RadzenStack>
+        </RadzenTemplateForm>
+    </RadzenColumn>
+</RadzenRow>

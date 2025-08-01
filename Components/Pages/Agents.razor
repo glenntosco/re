@@ -1,0 +1,65 @@
+@page "/agents"
+
+
+@using Re.Models
+@using Re.Models.RealEstateDB
+
+<PageTitle>Agents</PageTitle>
+
+<RadzenRow Style="max-width: 1440px" class="rz-w-100 rz-mx-auto">
+    <RadzenColumn Size="12" Visible="@IsFilterVisible" Order="1" SizeMD="3" OrderMD="2">
+        <RadzenStack Gap="1rem" Wrap="Radzen.FlexWrap.Wrap" class="rz-px-8 rz-px-md-6 rz-pt-3 rz-mt-md-10">
+                <RadzenRow Gap="0.5rem" AlignItems="Radzen.AlignItems.Center">
+                    <RadzenColumn Size="12">
+                        <RadzenTextBox @bind-Value=@name Placeholder="Agent Name" class="rz-w-100"></RadzenTextBox>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12">
+                        <RadzenTextBox @bind-Value=@specialties Placeholder="Specialties" class="rz-w-100"></RadzenTextBox>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12">
+                        <RadzenTextBox @bind-Value=@notes Placeholder="Notes" class="rz-w-100"></RadzenTextBox>
+                    </RadzenColumn>
+                </RadzenRow>
+                <RadzenStack>
+                    <RadzenButton ButtonStyle="ButtonStyle.Primary" ButtonType="ButtonType.Button" Text="Apply Filters" Variant="Variant.Flat" class="rz-w-100"
+                                  Click="@(args => LoadData(new LoadDataArgs() { Skip = 0, Top = 2 }))" />
+                </RadzenStack>
+        </RadzenStack>
+    </RadzenColumn>
+    <RadzenColumn class="@(IsFilterVisible ? "rz-col-12 rz-col-md-9" : "rz-col-12")" Order="1">
+        <RadzenRow class="rz-w-100 rz-mx-auto" RowGap="0" Style="max-width: 1440px">
+            <RadzenColumn Size="12" class="rz-px-8 rz-px-md-6 rz-pt-3 rz-pb-1 rz-pt-sm-6">
+                <RadzenBreadCrumb>
+                <RadzenBreadCrumbItem Text="Home" Path="/" />
+                <RadzenBreadCrumbItem Text="Agents" />
+                </RadzenBreadCrumb>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="8" class="rz-px-8 rz-px-md-6 rz-pb-6">
+                <RadzenText Text="Agents" TextStyle="Radzen.Blazor.TextStyle.H2" TextAlign="Radzen.TextAlign.Left" Style="max-width: 800px" TagName="Radzen.Blazor.TagName.H1" class="rz-m-0" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="4" class="rz-px-6 rz-pb-6 rz-text-align-start rz-text-align-md-end">
+                <RadzenToggleButton ButtonStyle="Radzen.ButtonStyle.Primary" Variant="Variant.Flat" Icon="filter_alt" Text="@(IsFilterVisible ? "Hide Filters" : "Show Filters")" @bind-Value="@IsFilterVisible" class="rz-w-100 rz-w-md-fit-content" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow class="rz-w-100 rz-mx-auto rz-px-8 rz-px-md-6" Style="--rz-carousel-border-radius: var(--rz-card-border-radius) var(--rz-card-border-radius) 0 0;" Gap="2rem" RowGap="2rem">
+            <RadzenDataList Data="@agents" LoadData="@LoadData" Count="@count" IsLoading="@isLoading" AllowPaging=true PageSize="2" WrapItems="true" class="rz-w-100" Style="min-height: 530px;">
+                <Template>
+                    <RadzenColumn Size="12" SizeMD="6" Style="width:40%;" class="rz-overflow-hidden">
+                        <RadzenCard class="rz-h-100 rz-h-md-auto rz-p-0 rz-overflow-hidden">
+                            <RadzenStack Orientation="Radzen.Orientation.Horizontal" Gap="1rem" AlignItems="Radzen.AlignItems.Center">
+                                <RadzenLink Path=@($"agent-details/{context.Id}")><RadzenImage Path=@context.Picture Style="height: 300px"></RadzenImage></RadzenLink>
+                                <RadzenStack Gap="0.5rem" class="rz-p-4 rz-p-sm-6">
+                                    <RadzenText Text="@($"{context.FirstName} {context.LastName}")" TextStyle="Radzen.Blazor.TextStyle.H5" class="rz-m-0" />
+                                    <RadzenText Text="@($"{context.Position}")" TextStyle="Radzen.Blazor.TextStyle.H6" />
+                                    <RadzenText Text="@($"{context.Notes}")" TextStyle="Radzen.Blazor.TextStyle.Body2" class="rz-display-none rz-display-xs-block" />
+                                    <RadzenLink Path=@($"agent-details/{context.Id}") Text="Learn more ..." />
+                                </RadzenStack>
+                            </RadzenStack>
+                        </RadzenCard>
+                    </RadzenColumn>
+                </Template>
+            </RadzenDataList>
+        </RadzenRow>
+    </RadzenColumn>
+</RadzenRow>
+
